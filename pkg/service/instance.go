@@ -2,14 +2,14 @@ package service
 
 import "ces-api/pkg/model"
 
-type Service struct {
+type InstanceService struct {
 	Repo model.Repository
 }
 
-func NewService(r model.Repository) *Service {
-	return &Service{r}
+func NewInstanceService(r model.Repository) *InstanceService {
+	return &InstanceService{r}
 }
 
-func (s *Service) GetInstanceList(dept, page string) *[]model.Instance {
+func (s *InstanceService) GetInstanceList(dept, page string) *[]model.Instance {
 	return s.Repo.GetInstanceList(dept, page)
 }
