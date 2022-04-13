@@ -45,9 +45,9 @@ type XHeader struct {
 }
 
 type Repository interface {
-	GetInstanceList(dept string) *[]Instance
+	GetInstanceList(dept, page string) *[]Instance
 }
 
 type Service interface {
-	GetInstanceList(dept string) *[]Instance
+	GetInstanceList(dept, page string) *[]Instance
 }

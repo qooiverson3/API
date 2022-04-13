@@ -38,9 +38,9 @@ func (h *InstanceHandler) GetInstanceList(e *gin.Context) {
 	}
 
 	dept := e.Query("dept")
-	// page := e.Query("page")
+	page := e.Query("page")
 
-	data := h.Svc.GetInstanceList(dept)
+	data := h.Svc.GetInstanceList(dept, page)
 	e.JSON(http.StatusOK, gin.H{
 		"state": true,
 		"data":  data,
