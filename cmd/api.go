@@ -46,9 +46,12 @@ var apiCmd = &cobra.Command{
 		}
 
 		httpEngine := gin.Default()
+
+		// get instance list
 		r := storage.NewInstanceRepo(db)
 		s := service.NewInstanceService(r)
 		h := handler.NewInstanceHandler(s)
+
 		h.Router(httpEngine)
 		httpEngine.Run(":8089")
 
