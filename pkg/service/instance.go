@@ -11,5 +11,5 @@ func NewInstanceService(r model.Repository) *InstanceService {
 }
 
 func (s *InstanceService) GetInstanceList(dept, page string) *[]model.Instance {
-	return s.Repo.GetInstanceList(dept, page)
+	return s.Repo.QueryInstance(dept, page)
 }

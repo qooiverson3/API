@@ -20,6 +20,7 @@ import (
 	"ces-api/pkg/service"
 	"ces-api/pkg/storage"
 	"fmt"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
@@ -34,10 +35,14 @@ var apiCmd = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 
+		dbUser := os.Getenv("DB_USER")
+		dbPass := os.Getenv("DB_PASS")
+		dbConnect := os.Getenv("DB_CONNECT")
+
 		dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
-			"ces",
-			"P@ssw0rd",
-			"127.0.0.1",
+			dbUser,
+			dbPass,
+			dbConnect,
 			"CES",
 		)
 		db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})

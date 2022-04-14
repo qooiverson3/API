@@ -37,6 +37,17 @@ func (h *InstanceHandler) GetInstanceList(e *gin.Context) {
 		return
 	}
 
+	token := e.GetHeader("token")
+	if token != "4BEE7FAC2C9FE56685E61637248EF2A3" {
+		e.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+			"state": false,
+			"message": []string{
+				"illegal token.",
+			},
+		})
+		return
+	}
+
 	dept := e.Query("dept")
 	page := e.Query("page")
 
