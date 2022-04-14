@@ -3,6 +3,7 @@ package handler
 import (
 	"ces-api/pkg/model"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -38,7 +39,7 @@ func (h *InstanceHandler) GetInstanceList(e *gin.Context) {
 	}
 
 	token := e.GetHeader("token")
-	if token != "4BEE7FAC2C9FE56685E61637248EF2A3" {
+	if token != os.Getenv("TOKEN") {
 		e.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"state": false,
 			"message": []string{
