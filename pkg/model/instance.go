@@ -44,8 +44,14 @@ type XHeader struct {
 	Token string `header:"token" binding:"required"`
 }
 
+type ActionRequestBody struct {
+	UUID  string `json:"uuid" validate:"required"`
+	State uint   `json:"state" binding:"required"`
+}
+
 type Repository interface {
 	QueryInstance(dept, page string) *[]Instance
+	UpdateInstance(uuid, state string) (int64, error)
 }
 
 type Service interface {

@@ -24,3 +24,11 @@ func (r *InstanceRepo) QueryInstance(dept, page string) *[]model.Instance {
 
 	return &instance
 }
+
+func (r *InstanceRepo) UpdateInstance(uuid, state string) (int64, error) {
+	result := r.Db.Table("orderList_sz").Where("a_uuid = ?", uuid).Update("a_state", state)
+	if result.Error != nil {
+		return result.RowsAffected, result.Error
+	}
+	return result.RowsAffected, nil
+}

@@ -16,7 +16,7 @@ limitations under the License.
 package cmd
 
 import (
-	"ces-api/pkg/handler"
+	"ces-api/pkg/delivery"
 	"ces-api/pkg/service"
 	"ces-api/pkg/storage"
 	"fmt"
@@ -56,7 +56,7 @@ var apiCmd = &cobra.Command{
 		// get instance list
 		r := storage.NewInstanceRepo(db)
 		s := service.NewInstanceService(r)
-		h := handler.NewInstanceHandler(s)
+		h := delivery.NewInstanceHandler(s)
 
 		h.Router(httpEngine)
 		httpEngine.Run(":8089")
