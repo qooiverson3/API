@@ -24,7 +24,7 @@ func (r *InstanceRepo) QueryInstance(q model.GetInstanceForm) *[]model.Instance 
 }
 
 func (r *InstanceRepo) UpdateInstance(uuid, state string) (int64, error) {
-	result := r.Db.Table("orderList_sz").Where("a_uuid = ?", uuid).Update("a_state", state)
+	result := r.Db.Table("orderList_sz").Where("a_uuid = ?", uuid).Update("a_status", state)
 	if result.Error != nil {
 		return result.RowsAffected, result.Error
 	}

@@ -50,8 +50,8 @@ type GetInstanceForm struct {
 }
 
 type ActionRequestBody struct {
-	UUID  string `json:"uuid" validate:"required"`
-	State uint   `json:"state" validate:"required"`
+	UUID  string `json:"uuid" validate:"required,uuid"`
+	State uint   `json:"state" validate:"required,max=5"`
 }
 
 type Repository interface {
@@ -61,4 +61,5 @@ type Repository interface {
 
 type Service interface {
 	GetInstanceList(s GetInstanceForm) *[]Instance
+	Actions(s ActionRequestBody) int64
 }

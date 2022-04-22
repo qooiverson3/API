@@ -26,13 +26,13 @@ func (h *InstanceHandler) Router(e *gin.Engine) {
 	e.PATCH("/api/v1/instance/action", h.Actions)
 }
 
-func IsHeaderValidate(e *gin.Context) bool {
+func IsHeaderValidate(ctx *gin.Context) bool {
 	header := &model.XHeader{}
-	err := e.ShouldBindHeader(header)
+	err := ctx.ShouldBindHeader(header)
 	var state bool = true
 
 	if err != nil {
-		e.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"state": false,
 			"message": []string{
 				fmt.Sprintf("token error: %v", err.Error()),
@@ -42,9 +42,9 @@ func IsHeaderValidate(e *gin.Context) bool {
 		return state
 	}
 
-	token := e.GetHeader("token")
+	token := ctx.GetHeader("token")
 	if token != os.Getenv("TOKEN") {
-		e.AbortWithStatusJSON(http.StatusForbidden, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{
 			"state": false,
 			"message": []string{
 				"illegal token.",
@@ -58,55 +58,66 @@ func IsHeaderValidate(e *gin.Context) bool {
 }
 
 // GetInstance _
-func (h *InstanceHandler) GetInstanceList(e *gin.Context) {
-	headerValidate := IsHeaderValidate(e)
+func (h *InstanceHandler) GetInstanceList(ctx *gin.Context) {
+	headerValidate := IsHeaderValidate(ctx)
 	if !headerValidate {
 		return
 	}
 
 	var r model.GetInstanceForm
-	e.Bind(&r)
+	ctx.Bind(&r)
 
 	validate := validator.New()
 	err := validate.Struct(&r)
 	if err != nil {
-		e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": err.Error(),
 		})
 		return
 	}
 
 	data := h.Svc.GetInstanceList(r)
-	e.JSON(http.StatusOK, gin.H{
+	ctx.JSON(http.StatusOK, gin.H{
 		"state": true,
 		"data":  data,
 	})
 }
 
-func (h *InstanceHandler) Actions(e *gin.Context) {
-	headerValidate := IsHeaderValidate(e)
+func (h *InstanceHandler) Actions(ctx *gin.Context) {
+	headerValidate := IsHeaderValidate(ctx)
 	if !headerValidate {
 		return
 	}
 
-	var r model.ActionRequestBody
-	e.BindJSON(&r)
+	var body model.ActionRequestBody
+	ctx.BindJSON(&body)
 
 	validate := validator.New()
-	err := validate.Struct(&r)
+	err := validate.Struct(&body)
 	if err != nil {
-		e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"err": err.Error(),
 		})
 		return
 	}
 
 	if err != nil {
-		e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"state":   false,
 			"message": err.Error(),
 		})
 		return
 	}
-	e.JSON(http.StatusOK, r)
+
+	result := h.Svc.Actions(body)
+	if result == 0 {
+		ctx.AbortWithStatusJSON(http.StatusNoContent, gin.H{
+			"state": false,
+			"message": []string{
+				"illegal UUID.",
+			},
+		})
+		return
+	}
+	ctx.JSON(http.StatusAccepted, gin.H{})
 }
