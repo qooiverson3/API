@@ -10,8 +10,8 @@ func NewInstanceService(r model.Repository) *InstanceService {
 	return &InstanceService{r}
 }
 
-func (s *InstanceService) GetInstanceList(dept, page string) *[]model.Instance {
-	return s.Repo.QueryInstance(dept, page)
+func (s *InstanceService) GetInstanceList(q model.GetInstanceForm) *[]model.Instance {
+	return s.Repo.QueryInstance(q)
 }
 
 // Actions 機器開關機等操作

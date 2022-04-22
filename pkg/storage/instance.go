@@ -2,7 +2,6 @@ package storage
 
 import (
 	"ces-api/pkg/model"
-	"strconv"
 
 	"gorm.io/gorm"
 )
@@ -17,10 +16,9 @@ func NewInstanceRepo(r *gorm.DB) model.Repository {
 	}
 }
 
-func (r *InstanceRepo) QueryInstance(dept, page string) *[]model.Instance {
+func (r *InstanceRepo) QueryInstance(q model.GetInstanceForm) *[]model.Instance {
 	var instance []model.Instance
-	offset, _ := strconv.Atoi(page)
-	r.Db.Table("orderList_sz").Where("a_dept = ? ", dept).Offset((offset - 1) * 10).Limit(10).Find(&instance)
+	r.Db.Table("orderList_sz").Where("a_dept = ? ", q.Dept).Offset((q.Page - 1) * 10).Limit(10).Find(&instance)
 
 	return &instance
 }

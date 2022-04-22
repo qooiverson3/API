@@ -44,16 +44,21 @@ type XHeader struct {
 	Token string `header:"token" binding:"required"`
 }
 
+type GetInstanceForm struct {
+	Dept string `form:"dept" validate:"required"`
+	Page int    `form:"page" validate:"required"`
+}
+
 type ActionRequestBody struct {
 	UUID  string `json:"uuid" validate:"required"`
-	State uint   `json:"state" binding:"required"`
+	State uint   `json:"state" validate:"required"`
 }
 
 type Repository interface {
-	QueryInstance(dept, page string) *[]Instance
+	QueryInstance(q GetInstanceForm) *[]Instance
 	UpdateInstance(uuid, state string) (int64, error)
 }
 
 type Service interface {
-	GetInstanceList(dept, page string) *[]Instance
+	GetInstanceList(s GetInstanceForm) *[]Instance
 }

@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 )
 
 type InstanceHandler struct {
@@ -63,10 +64,19 @@ func (h *InstanceHandler) GetInstanceList(e *gin.Context) {
 		return
 	}
 
-	dept := e.Query("dept")
-	page := e.Query("page")
+	var r model.GetInstanceForm
+	e.Bind(&r)
 
-	data := h.Svc.GetInstanceList(dept, page)
+	validate := validator.New()
+	err := validate.Struct(&r)
+	if err != nil {
+		e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"err": err.Error(),
+		})
+		return
+	}
+
+	data := h.Svc.GetInstanceList(r)
 	e.JSON(http.StatusOK, gin.H{
 		"state": true,
 		"data":  data,
@@ -80,17 +90,17 @@ func (h *InstanceHandler) Actions(e *gin.Context) {
 	}
 
 	var r model.ActionRequestBody
+	e.BindJSON(&r)
 
-	// validate := validator.New()
-	// err := validate.Struct(&r)
-	// if err != nil {
-	// 	e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-	// 		"err": err,
-	// 	})
-	// 	return
-	// }
+	validate := validator.New()
+	err := validate.Struct(&r)
+	if err != nil {
+		e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"err": err.Error(),
+		})
+		return
+	}
 
-	err := e.BindJSON(&r)
 	if err != nil {
 		e.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"state":   false,
