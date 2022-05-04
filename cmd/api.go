@@ -53,7 +53,7 @@ var apiCmd = &cobra.Command{
 			panic(err)
 		}
 
-		logFile, _ := os.Create("gin.log")
+		logFile, _ := os.Create("logs/gin.log")
 		gin.DefaultWriter = io.MultiWriter(logFile)
 
 		httpEngine := gin.Default()
