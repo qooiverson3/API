@@ -22,8 +22,10 @@ func NewInstanceHandler(s model.Service) *InstanceHandler {
 
 // Router path
 func (h *InstanceHandler) Router(e *gin.Engine) {
-	e.GET("/api/v1/instance", h.GetInstanceList)
-	e.PATCH("/api/v1/instance/action", h.Actions)
+	v1 := e.Group("/api/v1")
+
+	v1.GET("/instance", h.GetInstanceList)
+	v1.PATCH("/instance/action", h.Actions)
 }
 
 func IsHeaderValidate(ctx *gin.Context) bool {

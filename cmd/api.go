@@ -20,8 +20,10 @@ import (
 	"ces-api/pkg/service"
 	"ces-api/pkg/storage"
 	"fmt"
+	"io"
 	"os"
 
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/cobra"
 	"gorm.io/driver/mysql"
@@ -51,8 +53,11 @@ var apiCmd = &cobra.Command{
 			panic(err)
 		}
 
-		httpEngine := gin.Default()
+		logFile, _ := os.Create("gin.log")
+		gin.DefaultWriter = io.MultiWriter(logFile)
 
+		httpEngine := gin.Default()
+		httpEngine.Use(gzip.Gzip(gzip.BestSpeed))
 		// get instance list
 		r := storage.NewInstanceRepo(db)
 		s := service.NewInstanceService(r)
